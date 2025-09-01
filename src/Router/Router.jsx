@@ -4,6 +4,7 @@ import Home from "../Page/Home/Home";
 import Login from "../Page/Authentication/Login";
 import Register from "../Page/Authentication/Register";
 import Error from "../Page/Cpmponents/Error";
+import ServicesAdd from "../Page/Cpmponents/Product/ServiceAdd";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "/Register",
         element: <Register></Register>
+      },
+      {
+        path:'/seller',
+        element: <ServicesAdd></ServicesAdd>
       }
     ]
   },

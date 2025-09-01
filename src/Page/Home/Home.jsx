@@ -1,6 +1,7 @@
 import React from 'react';
 import Search from '../Cpmponents/Search';
-import Card from '../Cpmponents/Card';
+import Card from '../Cpmponents/Card/Card';
+
 
 const Home = () => {
     return (
