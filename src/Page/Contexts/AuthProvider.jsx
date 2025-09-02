@@ -7,6 +7,7 @@ import {
     signOut,
 } from "firebase/auth";
 import { auth } from "../../Firebase/firebase.init";
+import axios from "axios";
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -27,14 +28,33 @@ const AuthProvider = ({ children }) => {
     // Logout user
     const logout = () => {
         setLoading(true);
+        localStorage.removeItem("access-token"); // remove JWT on logout
         return signOut(auth);
     };
 
-    // Observe auth state
+    // Observe auth state & generate JWT
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
-            setLoading(false); // Loading false after checking
+            setLoading(false);
+
+            if (currentUser?.email) {
+                try {
+                    // Call backend JWT endpoint
+                    const { data } = await axios.post(
+                        "http://localhost:3000/jwt",
+                        { email: currentUser.email }
+                    );
+
+                    // Save JWT in localStorage
+                    localStorage.setItem("access-token", data.token);
+                    console.log("JWT saved:", data.token);
+                } catch (err) {
+                    console.error("JWT generation failed:", err);
+                }
+            } else {
+                localStorage.removeItem("access-token");
+            }
         });
 
         return () => unsubscribe();
@@ -48,15 +68,6 @@ const AuthProvider = ({ children }) => {
         logout,
         loading,
     };
-
-    // Optional: Loading fallback
-    // if (loading) {
-    //     return (
-    //         <div className="flex justify-center items-center h-screen text-green-500">
-    //             Loading...
-    //         </div>
-    //     );
-    // }
 
     return (
         <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>

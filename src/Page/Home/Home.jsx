@@ -7,9 +7,9 @@ import PublicServices from '../Cpmponents/Services/PublicServices';
 const Home = () => {
     return (
         <div>
-        <Search></Search>
+    
         <PublicServices></PublicServices>
-        <Card></Card>
+      
         </div>
     );
 };

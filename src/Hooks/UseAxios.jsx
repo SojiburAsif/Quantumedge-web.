@@ -1,29 +1,31 @@
-// UseAxiosSecure.js
 import axios from "axios";
 
-// Create axios instance
+// Axios instance
 const axiosSecure = axios.create({
   baseURL: "http://localhost:3000",
+  withCredentials: true, // ✅ Send cookies automatically
 });
 
-// Add JWT token automatically to requests
+// Optional: request interceptor (যদি প্রয়োজন হয়, যেমন logging)
 axiosSecure.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access-token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+   
     return config;
   },
   (error) => {
-    // Handle request errors
     return Promise.reject(error);
   }
 );
 
-// Hook / helper to use this axios instance
-const useAxiosSecure = () => {
-  return axiosSecure;
-};
+// Optional: response interceptor (error handling)
+axiosSecure.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error("Axios error:", error);
+    return Promise.reject(error);
+  }
+);
+
+const useAxiosSecure = () => axiosSecure;
 
 export default useAxiosSecure;

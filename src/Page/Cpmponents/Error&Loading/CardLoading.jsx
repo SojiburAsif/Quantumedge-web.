@@ -1,25 +1,17 @@
 import React from "react";
+import { FaRegCalendar } from "react-icons/fa";
 
 const CardLoading = () => {
   return (
-    <div className="animate-pulse">
-      <div className="bg-gray-800 rounded-2xl shadow-lg p-4 w-full max-w-sm border border-green-900/30">
-        {/* Image placeholder */}
-        <div className="h-32 bg-gray-700 rounded-xl mb-4"></div>
-
-        {/* Title placeholder */}
-        <div className="h-5 bg-gray-700 rounded w-3/4 mb-3"></div>
-
-        {/* Subtitle placeholder */}
-        <div className="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
-
-        {/* Buttons/Action placeholder */}
-        <div className="flex gap-3">
-          <div className="h-9 bg-gray-700 rounded-lg flex-1"></div>
-          <div className="h-9 bg-gray-700 rounded-lg flex-1"></div>
+   <div className="p-6 min-h-screen bg-gradient-to-br from-[#14301a] via-[#030a05] to-[#082c11] flex items-center justify-center">
+        <div className="text-center max-w-xl">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/6 mb-4">
+            <FaRegCalendar className="text-2xl text-green-200" />
+          </div>
+          <h3 className="text-2xl font-semibold text-white mb-2">No bookings yet</h3>
+          <p className="text-sm text-green-200">You have not booked any services. When you do, they will appear here.</p>
         </div>
       </div>
-    </div>
   );
 };
 

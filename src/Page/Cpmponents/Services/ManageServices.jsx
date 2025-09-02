@@ -1,4 +1,3 @@
-// ManageServices.jsx
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../../Hooks/UseAxios";
 import Swal from "sweetalert2";
@@ -15,6 +14,10 @@ const ManageServices = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [serverError, setServerError] = useState(null);
 
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
   const fetchServices = async () => {
     setLoading(true);
     try {
@@ -22,22 +25,18 @@ const ManageServices = () => {
       setServices(Array.isArray(res.data) ? res.data : []);
       setError(null);
     } catch (err) {
-      console.error("Failed to fetch services:", err);
+      console.error(err);
       setError("Failed to load services. Check backend or CORS.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
   const getIdFromItem = (item) => {
     if (!item) return null;
+    if (item._id?.$oid) return item._id.$oid;
     if (item._id) return item._id;
     if (item.id) return item.id;
-    if (item._id && typeof item._id === "object" && item._id.$oid) return item._id.$oid;
     return null;
   };
 
@@ -93,24 +92,7 @@ const ManageServices = () => {
     }
 
     const payload = {
-      title: editingItem.title,
-      category: editingItem.category,
-      projectType: editingItem.projectType,
-      description: editingItem.description,
-      duration: editingItem.duration,
-      budget: editingItem.budget,
-      price: editingItem.price,
-      level: editingItem.level,
-      client: editingItem.client,
-      skills: editingItem.skills,
-      rawDate: editingItem.rawDate || undefined,
-      date: editingItem.rawDate
-        ? new Date(editingItem.rawDate).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })
-        : editingItem.date,
+      ...editingItem,
       badges: toArray(editingItem.badges),
       tags: toArray(editingItem.tags),
       extraTags: toArray(editingItem.extraTags),
@@ -118,10 +100,7 @@ const ManageServices = () => {
     };
 
     try {
-      console.log("Updating service:", id, payload);
-      // use PATCH (backend should support PATCH /services/:id) — change to put if your server expects PUT
       const res = await axiosSecure.patch(`/services/${id}`, payload);
-
       const updatedDoc = res?.data || { ...editingItem, ...payload };
 
       setServices((prev) =>
@@ -137,7 +116,6 @@ const ManageServices = () => {
         text: "Service updated successfully.",
         confirmButtonColor: "#16a34a",
       });
-
       closeEdit();
     } catch (err) {
       console.error("Update failed:", err);
@@ -165,7 +143,6 @@ const ManageServices = () => {
     try {
       await axiosSecure.delete(`/services/${id}`);
       setServices((prev) => prev.filter((s) => getIdFromItem(s) !== id));
-
       Swal.fire({
         icon: "success",
         title: "Deleted",
@@ -173,7 +150,7 @@ const ManageServices = () => {
         confirmButtonColor: "#16a34a",
       });
     } catch (err) {
-      console.error("Delete failed:", err);
+      console.error(err);
       Swal.fire({
         icon: "error",
         title: "Failed to delete",
@@ -189,7 +166,7 @@ const ManageServices = () => {
         <h2 className="text-2xl font-semibold text-green-200 mb-6">Manage Services</h2>
 
         {loading ? (
-          <CardLoading></CardLoading>
+          <CardLoading />
         ) : error ? (
           <div className="text-red-400 mb-4">{error}</div>
         ) : services.length === 0 ? (
@@ -202,6 +179,7 @@ const ManageServices = () => {
               const tags = Array.isArray(s.tags) ? s.tags : toArray(s.tags);
               const postedBy =
                 s.client || (Array.isArray(s.freelancers) && s.freelancers[0]) || s.postedBy || s.name || s.title;
+
               return (
                 <article
                   key={id}
@@ -242,16 +220,7 @@ const ManageServices = () => {
                       <span className="text-xs text-green-200">No badges</span>
                     ) : (
                       badges.slice(0, 3).map((b, i) => (
-                        <span
-                          key={i}
-                          className={`text-[11px] px-2 py-1 rounded-full ${
-                            i === 0
-                              ? "bg-white/6 text-green-200"
-                              : i === 1
-                              ? "bg-white/6 text-green-200"
-                              : "bg-white/6 text-green-200"
-                          }`}
-                        >
+                        <span key={i} className="text-[11px] px-2 py-1 rounded-full bg-white/6 text-green-200">
                           {b}
                         </span>
                       ))
@@ -311,77 +280,17 @@ const ManageServices = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  name="title"
-                  value={editingItem.title || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Title"
-                  required
-                />
-                <input
-                  name="category"
-                  value={editingItem.category || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Category"
-                />
-                <input
-                  name="projectType"
-                  value={editingItem.projectType || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Project Type"
-                />
-                <input
-                  name="duration"
-                  value={editingItem.duration || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Duration"
-                />
-                <input
-                  name="budget"
-                  value={editingItem.budget || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Budget"
-                />
-                <input
-                  name="price"
-                  value={editingItem.price || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Price"
-                />
-                <input
-                  name="level"
-                  value={editingItem.level || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Level"
-                />
-                <input
-                  name="client"
-                  value={editingItem.client || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Client"
-                />
-                <input
-                  name="skills"
-                  value={editingItem.skills || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Skills"
-                />
-                <input
-                  name="rawDate"
-                  type="date"
-                  value={editingItem.rawDate || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
+                {["title", "category", "projectType", "duration", "budget", "price", "level", "client", "skills", "rawDate"].map((field) => (
+                  <input
+                    key={field}
+                    name={field}
+                    type={field === "rawDate" ? "date" : "text"}
+                    value={editingItem[field] || ""}
+                    onChange={handleEditChange}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                ))}
               </div>
 
               <textarea
@@ -394,34 +303,16 @@ const ManageServices = () => {
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                <input
-                  name="badges"
-                  value={editingItem.badges || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Badges"
-                />
-                <input
-                  name="tags"
-                  value={editingItem.tags || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Tags"
-                />
-                <input
-                  name="extraTags"
-                  value={editingItem.extraTags || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Extra Tags"
-                />
-                <input
-                  name="freelancers"
-                  value={editingItem.freelancers || ""}
-                  onChange={handleEditChange}
-                  className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Freelancers"
-                />
+                {["badges", "tags", "extraTags", "freelancers"].map((field) => (
+                  <input
+                    key={field}
+                    name={field}
+                    value={editingItem[field] || ""}
+                    onChange={handleEditChange}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                ))}
               </div>
 
               {serverError && (
@@ -434,10 +325,7 @@ const ManageServices = () => {
                 <button type="button" onClick={closeEdit} className="px-4 py-2 bg-white/6 text-white rounded hover:bg-white/10">
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded inline-flex items-center gap-2 shadow"
-                >
+                <button type="submit" className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded inline-flex items-center gap-2 shadow">
                   <FaSave /> Save
                 </button>
               </div>
