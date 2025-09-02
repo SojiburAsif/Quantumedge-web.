@@ -10,6 +10,7 @@ import MainDashbord from "../Page/Dashbord/MainDashbord";
 import PrivateRouter from "../Page/Authentication/PrivateRoute";
 import Error from "../Page/Cpmponents/Error&Loading/Error";
 import ManageServices from "../Page/Cpmponents/Services/ManageServices";
+import BookingServices from "../Page/Cpmponents/Services/BookingServices";
 
 
 export const router = createBrowserRouter([
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
           {
             path: 'manage-services',
             element: <ManageServices></ManageServices>
+          },
+          {
+            path: 'booking-services',
+            element: <BookingServices></BookingServices>
           }
         ]
       }

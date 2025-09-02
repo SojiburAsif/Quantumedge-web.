@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../../Hooks/UseAxios";
 import Swal from "sweetalert2";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
+import CardLoading from "../Error&Loading/CardLoading";
 
 const ManageServices = () => {
   const axiosSecure = useAxiosSecure();
@@ -188,7 +189,7 @@ const ManageServices = () => {
         <h2 className="text-2xl font-semibold text-green-200 mb-6">Manage Services</h2>
 
         {loading ? (
-          <div className="text-green-200">Loading services...</div>
+          <CardLoading></CardLoading>
         ) : error ? (
           <div className="text-red-400 mb-4">{error}</div>
         ) : services.length === 0 ? (
