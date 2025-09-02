@@ -3,11 +3,13 @@ import Root from "./root";
 import Home from "../Page/Home/Home";
 import Login from "../Page/Authentication/Login";
 import Register from "../Page/Authentication/Register";
-import Error from "../Page/Cpmponents/Error";
-import ServicesAdd from "../Page/Cpmponents/Product/ServiceAdd";
+
+import ServicesAdd from "../Page/Cpmponents/Services/ServiceAdd";
 import DashboardLayout from "../Page/Dashbord/DashbordLayout";
 import MainDashbord from "../Page/Dashbord/MainDashbord";
 import PrivateRouter from "../Page/Authentication/PrivateRoute";
+import Error from "../Page/Cpmponents/Error&Loading/Error";
+import ManageServices from "../Page/Cpmponents/Services/ManageServices";
 
 
 export const router = createBrowserRouter([
@@ -28,7 +30,9 @@ export const router = createBrowserRouter([
         path: "/Register",
         element: <Register></Register>
       },
+      {
 
+      },
       {
         path: '/dashboard',
         element: <PrivateRouter><DashboardLayout></DashboardLayout></PrivateRouter>,
@@ -45,6 +49,10 @@ export const router = createBrowserRouter([
               <ServicesAdd></ServicesAdd>
             </PrivateRouter>
           },
+          {
+            path: 'manage-services',
+            element: <ManageServices></ManageServices>
+          }
         ]
       }
     ]

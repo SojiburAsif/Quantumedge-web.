@@ -1,5 +1,5 @@
 import React from 'react';
-import errorAnimation from '../../assets/Lottii/Animation - 1748975144594.json';
+import errorAnimation from '../../../assets/Lottii/Animation - 1748975144594.json';
 import { Link } from 'react-router';
 import Lottie from 'react-lottie';
 import { FaHome, FaExclamationTriangle } from 'react-icons/fa';

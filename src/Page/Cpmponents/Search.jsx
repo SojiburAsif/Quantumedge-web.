@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { FaArrowRight, FaChevronDown } from "react-icons/fa6"; // Arrow imports
+import { FaChevronDown } from "react-icons/fa6";
 
 const options = [
   "Web Developer",
@@ -14,31 +14,30 @@ const Search = () => {
   const [currentText, setCurrentText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Handle dropdown select
   const handleSelect = (option) => {
     setCurrentText(option);
     setDropdownOpen(false);
   };
 
   return (
-    <div>
-      <div className="max-w-[1400px] mx-auto px-6 py-14">
-        <div className="flex items-center justify-between">
-          {/* Centered Search */}
+    <div className="w-full">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-10 sm:py-14 mt-8 sm:mt-12">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-0">
+          {/* Search Section */}
           <div className="w-full flex justify-center">
-            <div className="w-full ">
-              {/* Input + Advanced search side by side */}
-              <div className="flex items-center gap-4">
+            <div className="w-full">
+              {/* Search input + Advanced search */}
+              <div className="flex flex-col sm:flex-row items-center gap-4">
                 {/* Search Box */}
-                <div className="relative w-[420px] p-[2px] rounded-xl bg-gradient-to-r from-pink-500 via-green-500 to-blue-500">
-                  {/* Inner box */}
+                <div className="relative w-full sm:w-[420px] p-[2px] rounded-xl bg-gradient-to-r from-pink-500 via-green-500 to-blue-500">
+                  {/* Inner Box */}
                   <div className="flex items-center w-full bg-[#112217] rounded-xl px-3 border-2 border-transparent shadow-md shadow-green-900/40 focus-within:shadow-green-500/40 transition relative">
                     <input
                       type="text"
                       placeholder="Search your needs"
                       value={currentText}
                       onChange={(e) => setCurrentText(e.target.value)}
-                      className="grow bg-transparent text-sm text-white placeholder-gray-400 px-2 py-2 outline-none"
+                      className="grow bg-transparent text-sm sm:text-base text-white placeholder-gray-400 px-2 py-2 outline-none"
                     />
 
                     {/* Dropdown toggle */}
@@ -53,18 +52,10 @@ const Search = () => {
                       />
                     </button>
 
-                    {/* Arrow + Search button group */}
-                    <div className="flex items-center gap-2 ml-2">
-                      {/* Arrow button */}
-                      {/* <button className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 transition shadow-md shadow-green-900/30 hover:shadow-green-500/40">
-                        <FaArrowRight className="text-[#00210a] text-xs" />
-                      </button> */}
-
-                      {/* Search button */}
-                      <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[#19b94a] hover:bg-[#15963d] transition shadow-md shadow-green-900/30 hover:shadow-green-500/40">
-                        <FaSearch className="text-[#00210a] text-xs" />
-                      </button>
-                    </div>
+                    {/* Search button */}
+                    <button className="ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-[#19b94a] hover:bg-[#15963d] transition shadow-md shadow-green-900/30 hover:shadow-green-500/40">
+                      <FaSearch className="text-[#00210a] text-xs" />
+                    </button>
                   </div>
 
                   {/* Dropdown menu */}
@@ -83,15 +74,15 @@ const Search = () => {
                   )}
                 </div>
 
-                {/* Advanced search button (side by side) */}
-                <button className="btn btn-sm rounded-full bg-[#19b94a] border-none hover:bg-[#15963d] transition shadow-md shadow-green-900/30 hover:shadow-green-500/40">
+                {/* Advanced Search button */}
+                <button className="w-full sm:w-auto btn btn-sm rounded-full bg-[#19b94a] border-none hover:bg-[#15963d] transition shadow-md shadow-green-900/30 hover:shadow-green-500/40">
                   Advanced search
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Decorative circle */}
+          {/* Decorative circle (hidden on small screens) */}
           <div className="hidden lg:flex items-center justify-end w-1/4 pr-6">
             <svg
               width="64"
