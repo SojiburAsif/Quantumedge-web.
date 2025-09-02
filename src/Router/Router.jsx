@@ -7,6 +7,7 @@ import Error from "../Page/Cpmponents/Error";
 import ServicesAdd from "../Page/Cpmponents/Product/ServiceAdd";
 import DashboardLayout from "../Page/Dashbord/DashbordLayout";
 import MainDashbord from "../Page/Dashbord/MainDashbord";
+import PrivateRouter from "../Page/Authentication/PrivateRoute";
 
 
 export const router = createBrowserRouter([
@@ -30,15 +31,19 @@ export const router = createBrowserRouter([
 
       {
         path: '/dashboard',
-        element: <DashboardLayout></DashboardLayout>,
+        element: <PrivateRouter><DashboardLayout></DashboardLayout></PrivateRouter>,
         children: [
           {
             index: true,
-            element: <MainDashbord></MainDashbord>,
+            element: <PrivateRouter>
+              <MainDashbord></MainDashbord>
+            </PrivateRouter>
           },
           {
             path: 'add-services',
-            element: <ServicesAdd></ServicesAdd>
+            element: <PrivateRouter>
+              <ServicesAdd></ServicesAdd>
+            </PrivateRouter>
           },
         ]
       }
