@@ -50,7 +50,7 @@ export default function Header() {
             {/* RIGHT: Links / Login / Logout */}
             <div className="flex items-center gap-4">
               <NavLink
-                to="/seller"
+                to="/dashboard"
                 className="hidden lg:inline-block text-xs uppercase tracking-wider text-[#86f29a] hover:text-[#b2f5c0] transition"
               >
                 BECOME A SELLER
