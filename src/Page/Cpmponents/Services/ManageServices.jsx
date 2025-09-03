@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router"; // <-- react-router-dom
 import useAxiosSecure from "../../../Hooks/UseAxios";
 import Swal from "sweetalert2";
-import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import CardLoading from "../Error&Loading/CardLoading";
 
 const ManageServices = () => {
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [serverError, setServerError] = useState(null);
 
   useEffect(() => {
     fetchServices();
@@ -40,94 +39,22 @@ const ManageServices = () => {
     return null;
   };
 
-  const openEdit = (item) => {
-    setEditingItem({
-      ...item,
-      rawDate: item.rawDate
-        ? String(item.rawDate).slice(0, 10)
-        : item.date
-        ? new Date(item.date).toISOString().slice(0, 10)
-        : "",
-      badges: Array.isArray(item.badges) ? item.badges.join(", ") : item.badges || "",
-      tags: Array.isArray(item.tags) ? item.tags.join(", ") : item.tags || "",
-      extraTags: Array.isArray(item.extraTags) ? item.extraTags.join(", ") : item.extraTags || "",
-      freelancers: Array.isArray(item.freelancers) ? item.freelancers.join(", ") : item.freelancers || "",
-    });
-    setServerError(null);
-    setIsEditing(true);
-  };
-
-  const closeEdit = () => {
-    setIsEditing(false);
-    setEditingItem(null);
-    setServerError(null);
-  };
-
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditingItem((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const toArray = (val) => {
-    if (!val) return [];
-    if (Array.isArray(val)) return val;
-    return String(val).split(/[,|]/).map((s) => s.trim()).filter(Boolean);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setServerError(null);
-
-    if (!editingItem) return;
-
-    const id = getIdFromItem(editingItem);
+  const handleEdit = (service) => {
+    const id = service?._id; // MongoDB ObjectId field
     if (!id) {
       Swal.fire({
         icon: "error",
         title: "ID missing",
-        text: "Cannot update service. ID is missing.",
+        text: "Cannot edit service. ID is missing.",
         confirmButtonColor: "#dc2626",
       });
       return;
     }
 
-    const payload = {
-      ...editingItem,
-      badges: toArray(editingItem.badges),
-      tags: toArray(editingItem.tags),
-      extraTags: toArray(editingItem.extraTags),
-      freelancers: toArray(editingItem.freelancers),
-    };
-
-    try {
-      const res = await axiosSecure.patch(`/services/${id}`, payload);
-      const updatedDoc = res?.data || { ...editingItem, ...payload };
-
-      setServices((prev) =>
-        prev.map((s) => {
-          const sid = getIdFromItem(s);
-          return String(sid) === String(id) ? { ...s, ...updatedDoc } : s;
-        })
-      );
-
-      Swal.fire({
-        icon: "success",
-        title: "Updated",
-        text: "Service updated successfully.",
-        confirmButtonColor: "#16a34a",
-      });
-      closeEdit();
-    } catch (err) {
-      console.error("Update failed:", err);
-      setServerError(err.response?.data || err.message);
-      Swal.fire({
-        icon: "error",
-        title: "Failed to update",
-        text: err.response?.data?.message || err.message || "See console for details.",
-        confirmButtonColor: "#dc2626",
-      });
-    }
+    // Navigate to update page with correct ID and initial data
+    navigate(`/dashboard/services/update/${id}`, { state: { initialData: service } });
   };
+
 
   const handleDelete = async (id) => {
     const { isConfirmed } = await Swal.fire({
@@ -160,6 +87,12 @@ const ManageServices = () => {
     }
   };
 
+  const toArray = (val) => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    return String(val).split(/[,|]/).map((s) => s.trim()).filter(Boolean);
+  };
+
   return (
     <div className="p-8 min-h-screen bg-gradient-to-br from-[#0b2a13] via-[#07210f] to-[#021006]">
       <div className="max-w-7xl mx-auto">
@@ -185,7 +118,6 @@ const ManageServices = () => {
                   key={id}
                   className="relative overflow-hidden rounded-2xl p-6 shadow-lg transform transition hover:-translate-y-1 hover:shadow-2xl"
                 >
-                  {/* card gradient background */}
                   <div
                     className="absolute inset-0 -z-10"
                     style={{
@@ -197,7 +129,9 @@ const ManageServices = () => {
                   />
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <div className="text-xs text-green-200">{s.rawDate ? new Date(s.rawDate).toLocaleDateString() : s.date || ""}</div>
+                      <div className="text-xs text-green-200">
+                        {s.rawDate ? new Date(s.rawDate).toLocaleDateString() : s.date || ""}
+                      </div>
                       <h3 className="text-lg font-semibold text-white mt-1">{s.title || s.name}</h3>
                     </div>
                     <div className="text-right">
@@ -241,7 +175,7 @@ const ManageServices = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => openEdit(s)}
+                        onClick={() => handleEdit(s)}
                         className="px-3 py-1 rounded-full bg-green-500 hover:bg-green-600 text-white inline-flex items-center gap-2 shadow"
                       >
                         <FaEdit /> Edit
@@ -257,79 +191,6 @@ const ManageServices = () => {
                 </article>
               );
             })}
-          </div>
-        )}
-
-        {/* EDIT MODAL */}
-        {isEditing && editingItem && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 bg-black/50 p-4 overflow-auto">
-            <form
-              onSubmit={handleUpdate}
-              className="relative rounded-lg w-full max-w-3xl shadow-2xl"
-              style={{
-                background: "linear-gradient(135deg, #052e16 0%, #033217 50%, #01220c 100%)",
-                border: "1px solid rgba(34,197,94,0.08)",
-                padding: "20px",
-              }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-green-100">Edit Service</h3>
-                <button type="button" onClick={closeEdit} className="text-green-100 hover:text-white">
-                  <FaTimes />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {["title", "category", "projectType", "duration", "budget", "price", "level", "client", "skills", "rawDate"].map((field) => (
-                  <input
-                    key={field}
-                    name={field}
-                    type={field === "rawDate" ? "date" : "text"}
-                    value={editingItem[field] || ""}
-                    onChange={handleEditChange}
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                ))}
-              </div>
-
-              <textarea
-                name="description"
-                value={editingItem.description || ""}
-                onChange={handleEditChange}
-                className="border border-white/6 p-2 rounded bg-white/6 text-white w-full mt-3 placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Description"
-                rows={3}
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                {["badges", "tags", "extraTags", "freelancers"].map((field) => (
-                  <input
-                    key={field}
-                    name={field}
-                    value={editingItem[field] || ""}
-                    onChange={handleEditChange}
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    className="border border-white/6 p-2 rounded bg-white/6 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                ))}
-              </div>
-
-              {serverError && (
-                <pre className="mt-3 p-3 bg-red-50 text-sm text-red-700 rounded overflow-auto">
-                  {typeof serverError === "string" ? serverError : JSON.stringify(serverError, null, 2)}
-                </pre>
-              )}
-
-              <div className="flex justify-end gap-2 mt-4">
-                <button type="button" onClick={closeEdit} className="px-4 py-2 bg-white/6 text-white rounded hover:bg-white/10">
-                  Cancel
-                </button>
-                <button type="submit" className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded inline-flex items-center gap-2 shadow">
-                  <FaSave /> Save
-                </button>
-              </div>
-            </form>
           </div>
         )}
       </div>

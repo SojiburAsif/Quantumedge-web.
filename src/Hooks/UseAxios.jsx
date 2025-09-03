@@ -2,11 +2,11 @@ import axios from "axios";
 
 // Axios instance
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
-  withCredentials: true, // ✅ Send cookies automatically
+  baseURL: "https://lacsing.vercel.app/",
+  withCredentials: true, 
 });
 
-// Optional: request interceptor (যদি প্রয়োজন হয়, যেমন logging)
+
 axiosSecure.interceptors.request.use(
   (config) => {
    
@@ -17,7 +17,6 @@ axiosSecure.interceptors.request.use(
   }
 );
 
-// Optional: response interceptor (error handling)
 axiosSecure.interceptors.response.use(
   (response) => response,
   (error) => {

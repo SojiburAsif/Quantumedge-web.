@@ -20,7 +20,7 @@ const DashboardLayout = () => {
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-green-700">
-          <h2 className="text-xl font-bold text-green-400">Dashboard</h2>
+          <img className="w-35" src="https://i.ibb.co.com/f6zqCs3/521ed31f20ef6319a6b45c9c3855d0e9e1d4837f-1.png" alt="" />
           {/* Close button (only mobile) */}
           <button
             onClick={() => setIsOpen(false)}
@@ -35,10 +35,9 @@ const DashboardLayout = () => {
             to="/dashboard"
             end
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${
-                isActive
-                  ? "bg-gray-700 text-green-500"
-                  : "hover:bg-gray-700 hover:text-green-300"
+              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${isActive
+                ? "bg-gray-700 text-green-500"
+                : "hover:bg-gray-700 hover:text-green-300"
               }`
             }
             onClick={() => setIsOpen(false)}
@@ -51,10 +50,9 @@ const DashboardLayout = () => {
           <NavLink
             to="/dashboard/add-services"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${
-                isActive
-                  ? "bg-gray-700 text-green-500"
-                  : "hover:bg-gray-700 hover:text-green-300"
+              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${isActive
+                ? "bg-gray-700 text-green-500"
+                : "hover:bg-gray-700 hover:text-green-300"
               }`
             }
             onClick={() => setIsOpen(false)}
@@ -65,10 +63,9 @@ const DashboardLayout = () => {
           <NavLink
             to="/dashboard/manage-services"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${
-                isActive
-                  ? "bg-gray-700 text-green-500"
-                  : "hover:bg-gray-700 hover:text-green-300"
+              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${isActive
+                ? "bg-gray-700 text-green-500"
+                : "hover:bg-gray-700 hover:text-green-300"
               }`
             }
             onClick={() => setIsOpen(false)}
@@ -79,10 +76,9 @@ const DashboardLayout = () => {
           <NavLink
             to="/dashboard/booking-services"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${
-                isActive
-                  ? "bg-gray-700 text-green-500"
-                  : "hover:bg-gray-700 hover:text-green-300"
+              `flex items-center gap-2 px-3 py-2 rounded-md transition text-sm ${isActive
+                ? "bg-gray-700 text-green-500"
+                : "hover:bg-gray-700 hover:text-green-300"
               }`
             }
             onClick={() => setIsOpen(false)}

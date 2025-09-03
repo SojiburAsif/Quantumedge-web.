@@ -159,7 +159,7 @@ const PublicServices = () => {
         <div className="">
             <Search currentText={searchText} setCurrentText={setSearchText} />
 
-            <div className="p-8 bg-gray-50">
+            <div className="p-8 bg-gray-50 min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-8">{filteredData.length} result(s) found</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
@@ -172,77 +172,119 @@ const PublicServices = () => {
                             return (
                                 <article
                                     key={item._id || idx}
-                                    className={`relative bg-white rounded-2xl p-6 border border-gray-100 transition-transform duration-300 ease-out ${featured
+                                    className={`relative bg-white rounded-2xl p-6 border border-gray-100 transition-transform duration-300 ease-out 
+    ${featured
                                             ? "-mt-6 transform scale-[1.03] shadow-[0_30px_50px_rgba(0,0,0,0.12)] z-20"
                                             : "shadow-sm hover:shadow-md hover:-translate-y-1"
                                         }`}
                                     onMouseEnter={() => setFeaturedIndex(idx)}
+                                    style={{ minHeight: "420px" }} // ✅ fixed height
                                 >
-                                    {/* Date */}
+                                    {/* Top row: date */}
                                     <div className="text-xs text-gray-400 mb-3">{item.date}</div>
 
-                                    {/* Title + price badge */}
-                                    <div className="flex items-start justify-between gap-4">
-                                        <h4 className="text-md font-semibold text-gray-800 leading-tight">{item.title}</h4>
+                                    {/* Title + top pill */}
+                                    <div className="mb-3">
+                                        <h4 className="text-lg font-semibold text-gray-800 leading-tight mb-3">
+                                            {item.title}
+                                        </h4>
 
-                                        <div className="flex-shrink-0 text-right">
-                                            <div className="text-xs text-gray-500 mb-2">{item.projectType}</div>
-                                            <div className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-md">{item.price || item.budget || "—"}</div>
+                                        {/* pill: left = project type, right = price */}
+                                        <div className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-600">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[13px] bg-transparent px-2 py-1 rounded-md">
+                                                    {item.projectType || "Fixed Price Project"}
+                                                </span>
+                                            </div>
+                                            <div className="font-medium text-gray-800">
+                                                {item.price || item.budget || "$1,200-$1,400"}
+                                            </div>
                                         </div>
                                     </div>
 
                                     {/* Description */}
-                                    <p className="text-sm text-gray-500 mt-4 mb-4 line-clamp-3" style={{ WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                    <p
+                                        className="text-sm text-gray-500 mt-4 mb-4"
+                                        style={{
+                                            WebkitLineClamp: 3,
+                                            display: "-webkit-box",
+                                            WebkitBoxOrient: "vertical",
+                                            overflow: "hidden",
+                                        }}
+                                    >
                                         {item.description}
                                     </p>
 
-                                    {/* Badges row */}
+                                    {/* badges row (colored) */}
                                     <div className="flex flex-wrap items-center gap-2 mb-4">
-                                        {shownBadges.length === 0
-                                            ? <div className="text-xs text-gray-400">No badges</div>
-                                            : shownBadges.map((b, i) => (
+                                        {shownBadges.length === 0 ? (
+                                            <div className="text-xs text-gray-400">No badges</div>
+                                        ) : (
+                                            shownBadges.map((b, i) => (
                                                 <span
                                                     key={i}
-                                                    className={`flex items-center gap-2 text-[11px] px-2 py-1 rounded-full whitespace-nowrap ${i === 0 ? "bg-purple-50 text-purple-600" :
-                                                            i === 1 ? "bg-pink-50 text-pink-600" :
-                                                                "bg-green-50 text-green-600"
+                                                    className={`flex items-center gap-2 text-[11px] px-3 py-1 rounded-full whitespace-nowrap  ${i === 0 ? "bg-purple-50 text-purple-600" : i === 1 ? "bg-pink-50 text-pink-600" : "bg-green-50 text-green-600"
                                                         }`}
                                                 >
-                                                    <span className="inline-block w-2 h-2 rounded-full bg-green-600" />
+                                                    <span
+                                                        className="inline-block w-2 h-2 rounded-full bg-current"
+                                                        style={{
+                                                            color: i === 0 ? "#7c3aed" : i === 1 ? "#ec4899" : "#16a34a",
+                                                        }}
+                                                    />
                                                     {b}
                                                 </span>
                                             ))
-                                        }
+                                        )}
                                     </div>
 
-                                    {/* Tags */}
-                                    <div className="flex flex-wrap gap-2 mb-6">
+                                    {/* tags chips */}
+                                    {/* tags chips */}
+                                    <div className="flex flex-wrap gap-2 mb-2">
                                         {shownTags.map((t, i) => (
-                                            <span key={i} className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">{t}</span>
+                                            <span
+                                                key={i}
+                                                className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600"
+                                            >
+                                                {t}
+                                            </span>
                                         ))}
-                                        {moreTagsCount > 0 && <span className="text-xs text-gray-500">+{moreTagsCount} more</span>}
                                     </div>
 
-                                    {/* Footer: posted by + apply button */}
+                                    {/* ✅ more count on new line */}
+                                    {moreTagsCount > 0 && (
+                                        <div className="text-xs text-gray-500 mb-4">+{moreTagsCount} more</div>
+                                    )}
+
+
                                     <div className="border-t border-gray-200 pt-4 flex items-center justify-between gap-4">
                                         <div className="text-xs text-gray-500">
-                                            Posted by <span className="text-gray-800 font-medium">{item.postedBy}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <button
-                                                onClick={() => handleApplyClick(item, idx)}
-                                                className={`px-4 py-2 rounded-full text-sm font-medium transition ${featured ? "bg-green-500 hover:bg-green-600 text-white shadow-md" : "bg-gray-900 hover:bg-gray-800 text-white"
-                                                    }`}
-                                            >
-                                                Apply Now
-                                            </button>
+                                            Posted by{" "}
+                                            <span className="text-gray-800 font-medium">{item.postedBy}</span>
                                         </div>
                                     </div>
+
+                                    {/* ✅ Apply button moved below with spacing */}
+                                    <button
+                                        onClick={() => handleApplyClick(item, idx)}
+                                        className={`px-5 py-2 rounded-full mt-4 text-sm font-medium transition   ${featured
+                                                ? "bg-black hover:bg-green-500 text-white shadow-md"
+                                                : "bg-black hover:bg-green-500 text-white"
+                                            }`}
+                                    >
+                                        Apply Now
+                                    </button>
 
                                     {/* subtle focus ring to mimic center card glow */}
                                     {featured && (
-                                        <div className="pointer-events-none absolute inset-0 rounded-2xl -z-10" aria-hidden>
-                                            <div className="w-full h-full rounded-2xl" style={{ boxShadow: '0 60px 100px rgba(0,0,0,0.06)' }} />
+                                        <div
+                                            className="pointer-events-none absolute inset-0 rounded-2xl -z-10"
+                                            aria-hidden
+                                        >
+                                            <div
+                                                className="w-full h-full rounded-2xl"
+                                                style={{ boxShadow: "0 60px 100px rgba(0,0,0,0.06)" }}
+                                            />
                                         </div>
                                     )}
                                 </article>

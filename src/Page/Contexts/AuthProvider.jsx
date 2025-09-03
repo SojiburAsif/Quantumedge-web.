@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
                 try {
                     // Call backend JWT endpoint
                     const { data } = await axios.post(
-                        "http://localhost:3000/jwt",
+                        "https://glowing-treacle-1c276f.netlify.app/",
                         { email: currentUser.email }
                     );
 

@@ -11,6 +11,7 @@ import PrivateRouter from "../Page/Authentication/PrivateRoute";
 import Error from "../Page/Cpmponents/Error&Loading/Error";
 import ManageServices from "../Page/Cpmponents/Services/ManageServices";
 import BookingServices from "../Page/Cpmponents/Services/BookingServices";
+import ServicesUpdate from "../Page/Cpmponents/Services/UpdateServices";
 
 
 export const router = createBrowserRouter([
@@ -56,8 +57,19 @@ export const router = createBrowserRouter([
           },
           {
             path: 'booking-services',
-            element: <BookingServices></BookingServices>
+            element: <PrivateRouter>
+              <BookingServices></BookingServices>
+            </PrivateRouter>
+          },
+          {
+            path: "services/update/:id",
+            element: (
+              <PrivateRouter>
+                <ServicesUpdate />
+              </PrivateRouter>
+            ),
           }
+
         ]
       }
     ]

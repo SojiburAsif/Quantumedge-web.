@@ -145,7 +145,7 @@ const BookingServices = () => {
   return (
     <div className="p-6 min-h-screen mt-12 bg-gradient-to-br from-[#14301a] via-[#030a05] to-[#082c11]">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mt-12 mb-6">
           <h2 className="text-3xl font-bold text-white">My Bookings</h2>
           <div className="text-sm text-green-200">Total: <span className="font-semibold text-white">{bookings.length}</span></div>
         </div>
