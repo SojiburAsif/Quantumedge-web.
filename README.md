@@ -212,6 +212,5 @@ export default LottiePlayer;
 
 **MD Asif** — MERN Developer
 
-* Live Frontend: [https://glowing-treacle-1c276f.netlify.app/](https://glowing-treacle-1c276f.netlify.app/)
-* Live Backend: [https://lacsing.vercel.app/](https://lacsing.vercel.app/)
-* Contact: [your-email@example.com](mailto:your-email@example.com)
+
+* Contact: [asif81534@gmail.com](asif81534@gmail.com)
